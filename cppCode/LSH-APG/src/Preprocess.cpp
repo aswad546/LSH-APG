@@ -17,15 +17,15 @@
 #define min(a,b)            (((a) < (b)) ? (a) : (b))
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
 
-Preprocess::Preprocess(const std::string& path, const std::string& ben_file_)
+Preprocess::Preprocess(const std::string& train_path, const std::string& test_path, const std::string& ben_file_)
 {
 	lsh::timer timer;
 	std::cout << "LOADING DATA..." << std::endl;
 	timer.restart();
-	load_data(path);
+	load_data(train_path, test_path);
 	std::cout << "LOADING TIME: " << timer.elapsed() << "s." << std::endl << std::endl;
 
-	data_file = path;
+	data_file = train_path;
 	ben_file = ben_file_;
 	if (data.N > 400) {
 		ben_create();
@@ -93,6 +93,77 @@ void Preprocess::load_data(const std::string& path)
 	in.close();
 }
 
+void Preprocess::load_data(const std::string& train_path, const std::string& test_path)
+{
+	std::string train_file = train_path + "_new";
+	std::string test_file = test_path + "_new";
+	std::ifstream in_train(train_file.c_str(), std::ios::binary);
+	std::ifstream in_test(test_file.c_str(), std::ios::binary);
+	while (!in_train) {
+		printf("Fail to find train data file!\n");
+		exit(0);
+	}
+
+	while (!in_test) {
+		printf("Fail to find test data file!\n");
+		exit(0);
+	}
+
+	unsigned int train_header[3] = {};
+	assert(sizeof train_header == 3 * 4);
+	in_train.read((char*)train_header, sizeof(train_header));
+	assert(train_header[0] == sizeof(float));
+	data.N = train_header[1];
+	data.dim = train_header[2];
+	//I am assuming train data dimensions and test data dimensions are the same
+	unsigned int test_header[3] = {};
+	assert(sizeof test_header == 3 * 4);
+	in_test.read((char*)test_header, sizeof(test_header));
+	assert(test_header[0] == sizeof(float));
+	data.testN = test_header[1];
+	//Reading data from train file into data.val array
+	data.val = new float* [data.N];
+	for (int i = 0; i < data.N; ++i) {
+		data.val[i] = new float[data.dim];
+		//in.seekg(sizeof(float), std::ios::cur);
+		in_train.read((char*)data.val[i], sizeof(float) * data.dim);
+	}
+	//Reading data from test file into data.query array
+	data.query = new float* [data.testN];
+	for (int i = 0; i < data.testN; ++i) {
+		data.query[i] = new float[data.dim];
+		in_test.read((char*)data.query[i], sizeof(float) * data.dim);
+	}
+
+	//data.val = new float* [data.N];
+	//float* dataBase = new float[data.N * data.dim];
+	//in.read((char*)dataBase, sizeof(float) * (size_t)data.N * data.dim);
+	//for (int i = 0; i < data.N; ++i) {
+	//	data.val[i] = dataBase + i * data.dim;
+	//	//in.seekg(sizeof(float), std::ios::cur);
+	//	//in.read((char*)data.val[i], sizeof(float) * header[2]);
+	//}
+	//Replace code here
+	/*
+		int MaxQueryNum = 200;
+		data.query = data.val;
+		data.val = &(data.query[MaxQueryNum]);
+		data.N -= MaxQueryNum;
+	*/
+	
+
+	std::cout << "Load from new train file: " << train_file << "\n";
+	std::cout << "N=    " << data.N << "\n";
+	std::cout << "dim=  " << data.dim << "\n\n";
+
+	std::cout << "Load from new test file: " << train_file << "\n";
+	std::cout << "N=    " << data.testN << "\n";
+	std::cout << "dim=  " << data.dim << "\n\n";
+
+	in_train.close();
+	in_test.close();
+}
+
 struct Tuple
 {
 	unsigned id;
@@ -107,9 +178,10 @@ bool comp(const Tuple& a, const Tuple& b)
 void Preprocess::ben_make()
 {
 	int MaxQueryNum = min(200, (int)data.N - 201);
-	benchmark.N = MaxQueryNum, benchmark.num = 100;
-
-	benchmark.N += 200;
+	benchmark.N = data.testN, benchmark.num = 100;
+	// benchmark.N+=200;
+	
+	// benchmark.N += 200;
 
 	benchmark.indice = new int* [benchmark.N];
 	benchmark.dist = new float* [benchmark.N];
@@ -296,7 +368,7 @@ void Preprocess::showDataset()
 Preprocess::~Preprocess()
 {
 	int MaxQueryNum = min(200, (int)data.N - 201);
-	clear_2d_array(data.query, data.N + MaxQueryNum);
+	clear_2d_array(data.query, data.testN);
 	//clear_2d_array(Dists, MaxQueryNum);
 	clear_2d_array(benchmark.indice, benchmark.N);
 	clear_2d_array(benchmark.dist, benchmark.N);

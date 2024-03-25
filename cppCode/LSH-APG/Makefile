@@ -1,10 +1,9 @@
 #scl enable devtoolset-9 bash
 
-CC=g++ -std=c++17 -Ofast -lrt -DNDEBUG  -DHAVE_CXX0X -march=native -fpic -w -ftree-vectorize -ftree-vectorizer-verbose=0
+CC=g++ -std=c++17 -Ofast -lrt -DNDEBUG -DHAVE_CXX0X -march=native -fpic -w -ftree-vectorize -ftree-vectorizer-verbose=0 -g
 
-CCOMP=g++ -std=c++17 -Ofast -lrt -DNDEBUG  -DHAVE_CXX0X -openmp -march=native -fpic -w -fopenmp -ftree-vectorize -ftree-vectorizer-verbose=0
+CCOMP=g++ -std=c++17 -Ofast -lrt -DNDEBUG -DHAVE_CXX0X -openmp -march=native -fpic -w -fopenmp -ftree-vectorize -ftree-vectorizer-verbose=0 -g
 SRCS=$(wildcard ./src/*.cpp)
-
 
 lgo:$(SRCS)
 	rm -rf lgo

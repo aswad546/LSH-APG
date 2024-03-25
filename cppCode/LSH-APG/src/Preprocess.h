@@ -3,7 +3,7 @@
 #include <cmath>
 #include <assert.h>
 #include <unordered_map>
-
+#include <string>
 //#define _NOQUERY
 
 class Preprocess
@@ -19,9 +19,10 @@ public:
 	float beta = 0.1f;
 	
 public:
-	Preprocess(const std::string& path, const std::string& ben_file_);
+	Preprocess(const std::string& train_path, const std::string& test_path, const std::string& ben_file_);
 	Preprocess(const std::string& path, const std::string& ben_file_, float beta_);
-	void load_data(const std::string& path);
+	void load_data(const std::string& train_path);
+	void load_data(const std::string& train_path, const std::string& test_path);
 	void ben_make();
 	void ben_save();
 	void ben_correct();

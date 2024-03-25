@@ -11,7 +11,7 @@ int _lsh_UB=0;
 int main(int argc, char const* argv[])
 {
 	float c = 1.5;
-	unsigned k = 50;
+	unsigned k = 5;
 	unsigned L = 8, K = 10;//NUS
 	//L = 10, K = 5;
 	float beta = 0.1;
@@ -58,7 +58,7 @@ int main(int argc, char const* argv[])
 	std::cout << "K=        " << K << std::endl;
 	std::cout << "T=        " << T << std::endl;
 	std::cout << "lsh_UB=   " << _lsh_UB << std::endl;
-	Preprocess prep(data_fold + datasetName + ".data", data_fold + "ANN/" + datasetName + ".bench_graph");
+	Preprocess prep(data_fold + "binary/keystroke/benign/train/" + datasetName + ".data", data_fold + "binary/keystroke/benign/test/" + datasetName + ".data",  data_fold + "ANN/" + datasetName + ".bench_graph");
 
 	//return 0;
 
@@ -214,6 +214,7 @@ int main(int argc, char const* argv[])
 		<< ltm->tm_mon + 1 << '-' << ltm->tm_mday << ' ' << ltm->tm_hour << ':' << ltm->tm_min
 		<< "\n*****************************************************************************************************\n\n\n";
 #endif
+	
 	std::ofstream os1(query_result, std::ios_base::app);
 	os1.seekp(0, std::ios_base::end);
 	os1 << ss.str();

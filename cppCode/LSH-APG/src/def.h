@@ -9,6 +9,7 @@ struct Data
 	// Number of data
 	unsigned N = 0;
 	// Data matrix
+	unsigned testN = 0;
 	float** val = nullptr;
 	float** query=nullptr; // NO MORE THAN 200 POINTS
 };
