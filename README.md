@@ -52,4 +52,7 @@ For your application, you should also transform your dataset into this binary fo
 A sample dataset `audio.data_new` has been put in the directory `./dataset`.
 Also, you can get it, `audio.data`, from [here](http://www.cs.princeton.edu/cass/audio.tar.gz)(if so, rename it as `audio.data_new`). If the link is invalid, you can also get it from [data](https://github.com/RSIA-LIESMARS-WHU/LSHBOX-sample-data).
 
+In addition to this, the code has been customized to support train and test files for verification of model results against more traditional KNN based approaches. You may find an example dataset for keystroke data for different users in the `./dataset/binary/keystroke/benign` folder.
+
+
 For the datasets we use, you can get the raw data from following links: [MNIST](http://yann.lecun.com/exdb/mnist/index.html), [Deep1M](https://www.cse.cuhk.edu.hk/systems/hash/gqr/dataset/deep1M.tar.gz), [GIST](http://corpus-texmex.irisa.fr/), [TinyImages80M](https://hyper.ai/tracker/download?torrent=6552), [SIFT](http://corpus-texmex.irisa.fr/). Next, you should transform your raw dataset into the mentioned binary format, then rename it is `[datasetName].data_new` and put it in the directory `./dataset`.
