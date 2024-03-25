@@ -27,7 +27,7 @@ Preprocess::Preprocess(const std::string& path, const std::string& ben_file_)
 
 	data_file = path;
 	ben_file = ben_file_;
-	if (data.N > 500) {
+	if (data.N > 400) {
 		ben_create();
 	}
 }
@@ -120,6 +120,8 @@ void Preprocess::ben_make()
 	
 	lsh::progress_display pd(benchmark.N);
 
+
+	std::cout << "Benchmark table dimensions: " << benchmark.N << "x" << benchmark.num << std::endl;
 #pragma omp parallel for num_threads(100)
 	for (int j = 0; j < benchmark.N; j++)
 	{
