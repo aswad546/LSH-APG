@@ -1,1 +1,4 @@
 .vscode
+cppCode/LSH-APG/indexes
+dataset/ANN
+cppCode/LSH-APG/lgo
